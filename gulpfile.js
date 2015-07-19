@@ -9,6 +9,7 @@ var plugins = require('gulp-load-plugins')()
 var hbsfy = require("hbsfy")
 var watchify = require('watchify')
 var browserify_shim = require('browserify-shim')
+var brfs = require('brfs')
 var browserSync = require('browser-sync').create()
 var runSequence = require('run-sequence')
 
@@ -50,7 +51,7 @@ var bundler = watchify(browserify(dirs.src + '/js/' + inputFile + '.js', watchif
 hbsfy.configure({
   extensions: ['hbs']
 })
-bundler.transform(hbsfy).transform(browserify_shim)
+bundler.transform(hbsfy).transform(brfs).transform(browserify_shim)
 
 // On update recompile
 bundler.on('update', bundle)
@@ -64,7 +65,6 @@ function bundle() {
     })
     .pipe(source(dirs.src + "/js/" + inputFile + '.js'))
     .pipe(buffer())
-    .pipe(plugins.modernizr())
     .pipe(plugins.sourcemaps.init({loadMaps: true}))
     .pipe(plugins.uglify())
     .pipe(plugins.rename(outputFile + '.js'))
