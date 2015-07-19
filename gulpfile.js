@@ -64,7 +64,6 @@ function bundle() {
     })
     .pipe(source(dirs.src + "/js/" + inputFile + '.js'))
     .pipe(buffer())
-    .pipe(plugins.modernizr())
     .pipe(plugins.sourcemaps.init({loadMaps: true}))
     .pipe(plugins.uglify())
     .pipe(plugins.rename(outputFile + '.js'))
@@ -136,6 +135,7 @@ gulp.task('minify-css', function () {
     .pipe(plugins.utf8izeSourcemaps())
     .pipe(plugins.sourcemaps.write())
     .pipe(gulp.dest(dirs.dist + '/css'))
+    .pipe(browserSync.stream());
 })
 
 gulp.task('concat-css', function () {
@@ -163,7 +163,7 @@ gulp.task('watch:html', function () {
 gulp.task('build', function (done) {
   runSequence(
     'clean',
-    ['js', 'css', 'watch'],
+    ['css', 'watch'],
     'copy',
     done);
 });
@@ -177,8 +177,3 @@ gulp.task('default', ['build'], function () {
   })
 })
 
-// npm install gulp run-sequence gulp-plumber gulp-load-plugins gulp-util gulp-sourcemaps gulp-uglify gulp-rename gulp-minify-css gulp-concat-css gulp-utf8ize-sourcemaps --save-dev
-// npm install vinyl-source-stream browserify@10  watchify browserify-shim browser-sync --save-dev
-// npm install karma karma-chrome-launcher karma-jasmine --save-dev
-// npm install handlebars hbsfy --save-dev
-// npm install del jquery@1 normalize.css gulp-modernizr --save
