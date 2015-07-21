@@ -1,13 +1,20 @@
 "use strict";
 
-var $ = require('jquery')
-var fs = require('fs')
-var marked = require('marked')
+var React = require('react')
 
-window.console && console.log("bundle init.")
+var HelloMessage = React.createClass({
+  render: function () {
+    return <div>Hello {this.props.name}!</div>;
+  }
+})
+React.render(<HelloMessage name="John"/>, document.getElementById('ele-react-es5'))
 
-var mark = fs.readFileSync(__dirname + '/../doc/version01.md', 'utf8')
 
-var html = marked(mark)
 
-$('#ele-v01').html(html)
+class Hello extends React.Component {
+  render() {
+    return <div>Hello, {this.props.name}!</div>
+  }
+}
+
+React.render(<Hello name="Harmony"/>, document.getElementById('ele-react-es6'))

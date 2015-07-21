@@ -6,8 +6,8 @@ var browserify = require('browserify')
 var buffer = require('vinyl-buffer')
 var karma = require('karma').server
 var plugins = require('gulp-load-plugins')()
-var hbsfy = require("hbsfy")
 var watchify = require('watchify')
+var reactify = require('reactify')
 var browserify_shim = require('browserify-shim')
 var brfs = require('brfs')
 var browserSync = require('browser-sync').create()
@@ -48,10 +48,10 @@ watchify.args.debug = true
 var bundler = watchify(browserify(dirs.src + '/js/' + inputFile + '.js', watchify.args))
 
 // Transform
-hbsfy.configure({
-  extensions: ['hbs']
-})
-bundler.transform(hbsfy).transform(brfs).transform(browserify_shim)
+bundler
+  .transform(reactify, {'es6': true})
+  .transform(brfs)
+  .transform(browserify_shim)
 
 // On update recompile
 bundler.on('update', bundle)
@@ -98,7 +98,7 @@ gulp.task('copy:jquery', function () {
 })
 
 gulp.task('copy:modernizr', function () {
-  return gulp.src([ dirs.src + '/js/vendor/modernizr-2.8.3.min.js'])
+  return gulp.src([dirs.src + '/js/vendor/modernizr-2.8.3.min.js'])
     .pipe(gulp.dest(dirs.dist + '/js/vendor'));
 })
 
@@ -177,8 +177,3 @@ gulp.task('default', ['build'], function () {
   })
 })
 
-// npm install gulp run-sequence gulp-plumber gulp-load-plugins gulp-util gulp-sourcemaps gulp-uglify gulp-rename gulp-minify-css gulp-concat-css gulp-utf8ize-sourcemaps --save-dev
-// npm install vinyl-source-stream browserify@10  watchify browserify-shim browser-sync --save-dev
-// npm install karma karma-chrome-launcher karma-jasmine --save-dev
-// npm install handlebars hbsfy --save-dev
-// npm install del jquery@1 normalize.css gulp-modernizr --save
