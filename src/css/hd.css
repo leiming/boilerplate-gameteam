@@ -1,0 +1,48 @@
+.hd {
+  width: 100%;
+  height: 200px;
+  background-color: #075E73;
+  color: #fff;
+  text-align: center;
+}
+.hd h1 {
+  padding-top: 60px;
+  font-size: 42px;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, .3);
+  transition: all linear 0.3s;
+}
+
+.hd h1:hover:before {
+  content: "\5B";
+  position: relative;
+  animation: fadeIn linear 0.3s;
+  left: -20px;
+}
+
+.hd h1:hover:after {
+  content: "\5D";
+  position: relative;
+  animation: fadeOut linear 0.3s;
+  right: -20px;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    left: 0;
+  }
+  100% {
+    opacity: 1;
+    left: -20px;
+  }
+}
+@keyframes fadeOut {
+  0% {
+    opacity: 0;
+    right: 0;
+  }
+  100% {
+    opacity: 1;
+    right: -20px;
+  }
+}

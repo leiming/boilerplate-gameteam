@@ -1,0 +1,104 @@
+.bd {
+  background-color: #F2F2F2;
+}
+.bd-wrap {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+.bd-container {
+  max-width: 1020px;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 800px) {
+  .bd-container {
+    width: 100%;
+  }
+}
+
+.nav {
+  height: 54px;
+  margin: 0 auto;
+  color: #000;
+}
+
+.cur {
+  float: left;
+  font-size: 20px;
+}
+
+.cur a {
+  display: block;
+  padding: 15px 10px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+li.active {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-bottom-color: #fff;
+}
+
+.tab-content {
+  padding: 16px 36px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+
+}
+
+/*  MarkDown style  */
+#ele-v01 {
+  font-family: "Helvetica Neue",Helvetica,Arial, serif;
+}
+
+#ele-v01 h1, #ele-v01 h2, #ele-v01 h3,#ele-v01 h4 {
+  padding-bottom: 12px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+  border-bottom: 1px dashed #999;
+}
+
+#ele-v01 h1 {
+  font-size: 2.25em;
+}
+
+#ele-v01 h2 {
+  font-size: 1.75em;
+}
+
+#ele-v01 h3 {
+  font-size: 1.5em;
+}
+
+.markdown-body p, .markdown-body blockquote, .markdown-body ul, .markdown-body ol, .markdown-body dl, .markdown-body table, .markdown-body pre {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+blockquote {
+  border-left: 4px solid #777;
+  padding: 0 20px;
+  line-height: 1.6;
+}
+
+pre {
+  background: #474643;
+  color: #fff;
+  padding: 20px 30px;
+}
+
+code {
+  font-family: Consolas, Monaco, Droid Sans Mono, serif;
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+p code {
+  color: #fff;
+  background: #474643;
+  padding: 2px 4px;
+  font-size: 90%;
+  border-radius: 4px;
+}

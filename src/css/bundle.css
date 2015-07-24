@@ -1,4 +1,4 @@
-head, body {
-  font-size: 20px;
-  color: grey;
-}
+@import "base.css";
+@import "hd.css";
+@import "bd.css";
+@import "ft.css";

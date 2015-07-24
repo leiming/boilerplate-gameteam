@@ -57,6 +57,8 @@
     "gulp-modernizr": "0.0.0",
     "jquery": "^1.11.3",
     "marked": "^0.3.3",
+    "highlight.js": "^8.6.0",
+    "pygmentize-bundled": "^2.3.0",
     "normalize.css": "^3.0.3"
   },
   "h5bp-configs": {
