@@ -1,0 +1,16 @@
+<ul class="inline-wrap">
+    {{#each data}}
+      <li><a class="i-money" data-amount="{{this}}"><i>
+      </i>{{this}}</a></li>
+    {{/each}}
+    {{#if input}}
+      <li>
+        <span class="input"><i>
+        </i><input placeholder="其他金额" type="text" maxlength="6"><span
+          class="money-unit">元</span></span>
+        <span class="money-tip" style="display: none;">
+          <span class="error">请输入10 - 100,000之间的整数</span>
+        </span>
+      </li>
+    {{/if}}
+</ul>

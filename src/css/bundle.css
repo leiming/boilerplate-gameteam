@@ -1,4 +1,3 @@
-head, body {
-  font-size: 20px;
-  color: grey;
-}
+@import url("base.css");
+
+@import url("payment.css");

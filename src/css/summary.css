@@ -1,0 +1,40 @@
+.payment-summary {
+  margin-top: 20px;
+  padding-top: 17px;
+  border-top: 1px dashed #d7d7d7;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.exchange-number {
+  font-size: 30px;
+  margin: 0 5px;
+}
+
+.exchange-unit {
+  font-weight: normal;
+  line-height: 55px;
+  font-size: 14px;
+}
+.payment-submit-btn {
+  width: 269px;
+  height: 49px;
+  line-height: 48px;
+  background: #ff6640;
+  border-radius: 4px;
+  font-size: 16px;
+  color: #fff;
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+  cursor: pointer;
+}
+
+pre {
+  font-family: Monaco, Consolas, monospace;
+  width: 650px;
+  margin-top: 17px;
+  border: 1px solid #CCCCCC;
+  padding: 20px;
+  background: #EEEEEE;
+}

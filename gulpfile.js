@@ -63,16 +63,15 @@ function bundle() {
       browserSync.notify("Browserify Error!");
       this.emit('end')
     })
-    .pipe(source(dirs.src + "/js/" + inputFile + '.js'))
+    .pipe(source(outputFile + '.js'))
     .pipe(buffer())
     .pipe(plugins.sourcemaps.init({loadMaps: true}))
     .pipe(plugins.uglify())
-    .pipe(plugins.rename(outputFile + '.js'))
     .pipe(plugins.utf8izeSourcemaps())
     .pipe(plugins.sourcemaps.write())
     //.pipe(plugins.sourcemaps.write('./'))
     .pipe(gulp.dest(dirs.dist + '/js/'))
-    .pipe(browserSync.stream({once: true}))
+    .pipe(browserSync.reload({stream: true, once: true}))
 }
 
 gulp.task('watch:js', bundle)
@@ -98,7 +97,7 @@ gulp.task('copy:jquery', function () {
 })
 
 gulp.task('copy:modernizr', function () {
-  return gulp.src([ dirs.src + '/js/vendor/modernizr-2.8.3.min.js'])
+  return gulp.src([dirs.src + '/js/vendor/modernizr-2.8.3.min.js'])
     .pipe(gulp.dest(dirs.dist + '/js/vendor'));
 })
 
