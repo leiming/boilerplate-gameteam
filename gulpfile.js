@@ -4,7 +4,7 @@ var gulp = require('gulp')
 var source = require('vinyl-source-stream')
 var browserify = require('browserify')
 var buffer = require('vinyl-buffer')
-var karma = require('karma').server
+var karmaServer = require('karma').Server
 var plugins = require('gulp-load-plugins')()
 var hbsfy = require("hbsfy")
 var watchify = require('watchify')
@@ -152,17 +152,17 @@ gulp.task('concat-css', function () {
 
 // Run test once and exit
 gulp.task('test', function (done) {
-  karma.start({
+  new karmaServer({
     configFile: __dirname + '/karma.conf.js',
     singleRun: true
-  }, done)
+  }, done).start()
 })
 
 // Watch for file changes and re-run tests on each change
 gulp.task('tdd', function (done) {
-  karma.start({
+  new karmaServer({
     configFile: __dirname + '/karma.conf.js'
-  }, done)
+  }, done).start()
 })
 
 /**********************
