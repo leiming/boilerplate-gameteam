@@ -1,0 +1,85 @@
+.amount-container {
+  margin-top: 40px;
+}
+
+.i-money {
+  width: 80px;
+  height: 40px;
+  line-height: 40px;
+  background: #fff;
+  vertical-align: middle;
+  text-align: center;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.amount-container li .input {
+  display: inline-block;
+  position: relative;
+  width: 120px;
+  background: #F2F2F4;
+  border: #CCCCCC 1px solid;
+}
+
+.amount-container li .input input {
+  position: absolute;
+  margin-top: -16px;
+  margin-left: 3px;
+  padding: 0 9px;
+  top: 50%;
+  height: 30px;
+  line-height: 30px;
+  background: #ffffff;
+  width: 60px;
+  border: #cccccc 1px solid;
+}
+
+.amount-container li .input .money-unit {
+  position: relative;
+  top: 12px;
+  left: 93px;
+}
+
+.input {
+  border: 1px solid #50a07b;
+  width: 205px;
+  height: 40px;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: top;
+  font-size: 14px;
+  color: #73777c
+}
+
+.amount-container .money-tip {
+  color: #cccccc;
+  *zoom: 1;
+  *height: 42px;
+  line-height: 42px;
+}
+
+.amount-container .money-tip .error {
+  background: url("http://p5.yx-s.com/t01364a6d49c4457ef7.jpg") 0 1px no-repeat;
+  padding-left: 20px;
+  color: red;
+}
+
+
+/* 项目选中的绿色角标 */
+.tab-pane li.cur a i, .tab-pane li.cur .input i {
+  display: block;
+}
+
+.tab-pane li a i, .tab-pane li .input i {
+  background: url(http://p9.yx-s.com/t01690ab09400b5f0ed.png) no-repeat;
+  *zoom: 1;
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: none;
+  line-height: none;
+}
+
+/* 项目选中的绿色角标 End */

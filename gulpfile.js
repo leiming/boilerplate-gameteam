@@ -4,11 +4,12 @@ var gulp = require('gulp')
 var source = require('vinyl-source-stream')
 var browserify = require('browserify')
 var buffer = require('vinyl-buffer')
-var karma = require('karma').server
+var karmaServer = require('karma').Server
 var plugins = require('gulp-load-plugins')()
 var hbsfy = require("hbsfy")
 var watchify = require('watchify')
 var browserify_shim = require('browserify-shim')
+var brfs = require('brfs')
 var browserSync = require('browser-sync').create()
 var runSequence = require('run-sequence')
 
@@ -50,7 +51,7 @@ var bundler = watchify(browserify(dirs.src + '/js/' + inputFile + '.js', watchif
 hbsfy.configure({
   extensions: ['hbs']
 })
-bundler.transform(hbsfy).transform(browserify_shim)
+bundler.transform(hbsfy).transform(brfs).transform(browserify_shim)
 
 // On update recompile
 bundler.on('update', bundle)
@@ -62,17 +63,15 @@ function bundle() {
       browserSync.notify("Browserify Error!");
       this.emit('end')
     })
-    .pipe(source(dirs.src + "/js/" + inputFile + '.js'))
+    .pipe(source(outputFile + '.js'))
     .pipe(buffer())
-    .pipe(plugins.modernizr())
     .pipe(plugins.sourcemaps.init({loadMaps: true}))
     .pipe(plugins.uglify())
-    .pipe(plugins.rename(outputFile + '.js'))
     .pipe(plugins.utf8izeSourcemaps())
     .pipe(plugins.sourcemaps.write())
     //.pipe(plugins.sourcemaps.write('./'))
     .pipe(gulp.dest(dirs.dist + '/js/'))
-    .pipe(browserSync.stream({once: true}))
+    .pipe(browserSync.reload({stream: true, once: true}))
 }
 
 gulp.task('watch:js', bundle)
@@ -98,7 +97,7 @@ gulp.task('copy:jquery', function () {
 })
 
 gulp.task('copy:modernizr', function () {
-  return gulp.src([ dirs.src + '/js/vendor/modernizr-2.8.3.min.js'])
+  return gulp.src([dirs.src + '/js/vendor/modernizr-2.8.3.min.js'])
     .pipe(gulp.dest(dirs.dist + '/js/vendor'));
 })
 
@@ -136,6 +135,7 @@ gulp.task('minify-css', function () {
     .pipe(plugins.utf8izeSourcemaps())
     .pipe(plugins.sourcemaps.write())
     .pipe(gulp.dest(dirs.dist + '/css'))
+    .pipe(browserSync.stream());
 })
 
 gulp.task('concat-css', function () {
@@ -143,6 +143,26 @@ gulp.task('concat-css', function () {
     .pipe(plugins.concatCss(outputFile + '-ie6.css'))
     .pipe(gulp.dest(dirs.dist + '/css'))
     .pipe(browserSync.stream());
+})
+
+
+/**********************
+ * Test task.
+ **********************/
+
+// Run test once and exit
+gulp.task('test', function (done) {
+  new karmaServer({
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: true
+  }, done).start()
+})
+
+// Watch for file changes and re-run tests on each change
+gulp.task('tdd', function (done) {
+  new karmaServer({
+    configFile: __dirname + '/karma.conf.js'
+  }, done).start()
 })
 
 /**********************
@@ -163,7 +183,7 @@ gulp.task('watch:html', function () {
 gulp.task('build', function (done) {
   runSequence(
     'clean',
-    ['js', 'css', 'watch'],
+    ['css', 'watch'],
     'copy',
     done);
 });
@@ -177,8 +197,3 @@ gulp.task('default', ['build'], function () {
   })
 })
 
-// npm install gulp run-sequence gulp-plumber gulp-load-plugins gulp-util gulp-sourcemaps gulp-uglify gulp-rename gulp-minify-css gulp-concat-css gulp-utf8ize-sourcemaps --save-dev
-// npm install vinyl-source-stream browserify@10  watchify browserify-shim browser-sync --save-dev
-// npm install karma karma-chrome-launcher karma-jasmine --save-dev
-// npm install handlebars hbsfy --save-dev
-// npm install del jquery@1 normalize.css gulp-modernizr --save

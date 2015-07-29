@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/leiming/boilerplate-gameteam#readme",
   "devDependencies": {
+    "brfs": "^1.4.0",
     "browser-sync": "^2.7.13",
     "browserify": "^10.2.6",
     "browserify-shim": "^3.8.9",
@@ -39,8 +40,10 @@
     "gulp-util": "^3.0.6",
     "handlebars": "^3.0.3",
     "hbsfy": "^2.2.1",
+    "jasmine": "^2.3.1",
     "jasmine-core": "^2.3.4",
-    "karma": "^0.13.2",
+    "jasmine-jquery": "^2.1.0",
+    "karma": "^0.13.3",
     "karma-chrome-launcher": "^0.2.0",
     "karma-jasmine": "^0.3.6",
     "run-sequence": "^1.1.1",
@@ -49,12 +52,14 @@
     "watchify": "^3.3.0"
   },
   "browserify-shim": {
+    "$": "jQuery",
     "jquery": "jQuery",
     "external": "global:External"
   },
   "dependencies": {
     "gulp-modernizr": "0.0.0",
     "jquery": "^1.11.3",
+    "marked": "^0.3.3",
     "normalize.css": "^3.0.3"
   },
   "h5bp-configs": {

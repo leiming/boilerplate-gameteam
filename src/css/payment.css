@@ -1,0 +1,28 @@
+@import url("amount.css");
+
+@import url("summary.css");
+
+#ele-v02 {
+  margin: 17px;
+}
+
+.i-money {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  position: relative;
+  padding: 0 8px;
+  border: 1px solid #ccc;
+  margin: 0 -1px -1px 0;
+}
+
+.cur .i-money {
+  border: 1px solid #9CCD68;
+  margin: 0;
+  padding: 0 7px 0 8px;
+}
+
+.btn-disabled, .btn-disabled:hover {
+  background: silver;
+  cursor: default;
+}
