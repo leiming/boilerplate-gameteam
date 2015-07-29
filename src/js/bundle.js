@@ -1,13 +1,33 @@
 "use strict";
 
 var $ = require('jquery')
-var fs = require('fs')
-var marked = require('marked')
 
-window.console && console.log("bundle init.")
+/**
+ * 获取「金额」组件
+ * @type {Amount|exports|module.exports}
+ */
+var Amount = require('./modules/amount/amount')
 
-var mark = fs.readFileSync(__dirname + '/../doc/version01.md', 'utf8')
+/**
+ * 获取「汇总」组件
+ * @type {Summary|exports|module.exports}
+ */
+var Summary = require('./modules/summary/summary')
 
-var html = marked(mark)
+/**
+ * 覆写「数量」消息模板
+ */
+Summary.getPartial(require('./modules/customs/customQuantityPartial.hbs'))
 
-$('#ele-v01').html(html)
+var amount = Amount.render({}, '#ele-v02 .amount-container')
+var summary = Summary.render({}, '#ele-v02 .summary-container')
+
+
+/**
+ * 监听「金额」组件的变化，设置「汇总」组件的值
+ */
+$(amount).on('stateChange', function (event, state) {
+  summary.setState(state)
+})
+
+amount.setState({amount: 100})

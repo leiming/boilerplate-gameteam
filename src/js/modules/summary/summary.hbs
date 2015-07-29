@@ -1,0 +1,8 @@
+<div class="payment-summary">
+    {{#if isValid}}
+      {{> quantityPartial}}
+    {{/if}}
+  <a class="payment-submit-btn js-submit
+  {{#unless isValid}}btn-disabled{{/unless}} ">提交订单</a>
+</div>
+<pre>{{json this}}</pre>
