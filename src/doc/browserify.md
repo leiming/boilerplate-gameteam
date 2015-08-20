@@ -74,7 +74,7 @@ console.log(foo)
 这个参数我只试过暴露成全局对象，有一篇[文章](http://www.forbeslindesay.co.uk/post/46324645400/standalone-browserify-builds)举例了使用requirejs和commonjs时的方法，有兴趣的可以参考下。
 
 二、将 browserify 的 require 方法换名字
-使用 derequire 包，或者用API结合 gulp 使用，详见[这里]
+使用 derequire 包，或者用API结合 gulp 使用，详见Gulp+browserify里的 externalRequireName 参数
 
 * **生成sourcemap便于调试代码**
 
@@ -91,4 +91,56 @@ $ browserify foo.js --debug > bundle.js
 
 如在项目中使用了handlebars，正常的编译是不会识别 handlebars 的语法的，但是我们可以加-t参数，-t hbsfy（一个面向browserify编译handlebars的工具）预编译模板文件为html
 
+
+###Gulp + browserify
+这一节主要讲 browserify ，所以Gulp的东西简单略过，如果想详细了解 Gulp， 请看[这里]
+
+**引入browserify模块**
+```bash
+$ npm install browserify --save-dev
+```
+在gulp中的使用
+```javascript
+var browserify = require('browserify');
+var b = browserify();
+b.add('./browser/main.js');
+b.bundle().pipe(process.stdout);
+```
+
+**browserify()的参数**
+命令行的大部分参数这里都可以做到，举一个例子
+```javascript
+browserify({
+    entries: './foo.js',
+    debug: true,
+    standalone: foo,
+    extensions: '.hbs',
+    externalRequireName: load
+})
+```
+解释一下各个参数的意义：
+> `entries` 是入口文件，和`add()`方法的参数意义一样
+`debug` 生成sourcemap文件
+`standalone` 暴露UMD模块，和命令行一样
+`extensions` 指定后缀名，require的时候就可以省略后缀了
+`externalRequireName` 如果暴露了require方法，但是担心会发生冲突，可以用这个参数重命名require方法，如上面的例子重命名为 load，使用时： var foo = load('foo')
+
+**其他常用的方法**
+
+**add()**
+> `b.add()`  添加入口文件，可以是数组
+
+**require()**
+> `b.require()` 和-r参数一样，暴露模块到外部，不过不是用冒号分隔，是指定expose属性
+如 require('./vendor/angular/angular.js', {expose: 'angular'}) 使用时 require（'angular')
+
+**bundle()**
+> `b.bundle()` 打包文件
+
+**transform**
+> `b.transform()` 转换模块，可以链式调用，如b.transform(hbsfy).transform(brfs).transform(browserify_shim)， 参数还可以是 function
+
+
+##结语
+这些就是我在项目中学习到的使用方法，还有很多参数API我还不了解，最好的学习资料就是 browserify 的[Github](https://github.com/substack/node-browserify)地址了，大家一起进步一起学习吧。
 
