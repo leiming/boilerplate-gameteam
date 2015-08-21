@@ -1,7 +1,9 @@
 #使用browserify
 
----
+
 [browserify](https://github.com/substack/node-browserify) 是一个可以在前端编程中使用commonjs规范的工具，在写前端代码的时候完全可以用 node 中 require 和 module.exports 等方法，模块化你的代码，省去另写命名空间，立即执行函数等过程。使用时，只需要用 browserify 编译一下就可以使用了。
+
+[TOC]
 
 ##使用方法
 我使用 browserify 的时间还不长，对于他的各种参数和API理解还不够透彻，这里，我简单的讲下我的所学所得。

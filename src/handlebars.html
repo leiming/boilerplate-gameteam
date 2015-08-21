@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-cmn-Hans">
+<head>
+  <meta charset="UTF-8">
+  <title>Start Handlebars</title>
+</head>
+<body>
+
+<div class="hbs"></div>
+
+
+<script src="http://s0.qhimg.com/default/;jquery.min/jquery_1_11_3.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.3/handlebars.min.js'></script>
+
+<!--特殊的type，代表是handlebars-->
+<script id="entry-template" type="text/x-handlebars-template">
+  <div class="entry">
+    <h1>{{title}}</h1>
+    {{#with story}}
+    <div class="intro">{{intro}}</div>
+    <div class="body">{{body}}</div>
+    {{/with}}
+  </div>
+</script>
+
+
+<script>
+  //得到模板内容
+  var source   = $("#entry-template").html();
+  //编译模板
+  var template = Handlebars.compile(source);
+  var obj = {
+    title: "First Post",
+    story: {
+      intro: "Before the jump",
+      body: "After the jump"
+    }
+  }
+
+
+  //调用模板并传值
+  $('.hbs').html(template(obj))
+
+</script>
+
+</body>
+</html>
