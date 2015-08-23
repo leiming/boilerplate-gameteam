@@ -19,6 +19,6 @@ $ gulp
 
 ##Documentation
 
-How to use these tools, please look [DOC](https://github.com/leiming/boilerplate-gameteam/blob/master/src/doc/version01.md).
+How to use these tools, please look [DOC](https://github.com/leiming/boilerplate-gameteam/tree/master/src/doc).
 
 
