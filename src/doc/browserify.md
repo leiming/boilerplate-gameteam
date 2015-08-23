@@ -1,285 +1,148 @@
-#使用handlebars
+#使用browserify
 
-[handlebars](https://github.com/wycats/handlebars.js/) 是一个前端html模板，可以嵌入变量和简单的逻辑判断，在渲染大量重复的html、ajax接收数据渲染页面时非常有用，官方的文档非常详尽，在这里我简单介绍一下它的用法。
+
+[browserify](https://github.com/substack/node-browserify) 是一个可以在前端编程中使用commonjs规范的工具，在写前端代码的时候完全可以用 node 中 require 和 module.exports 等方法，模块化你的代码，省去另写命名空间，立即执行函数等过程。使用时，只需要用 browserify 编译一下就可以使用了。
 
 [TOC]
 
-**注意**
-使用模板是为了简化写繁杂重复的html标签，逻辑方面应该越简单越好。
-handlebars虽然提供了逻辑判断方法，但是能在模板外判断的数据尽量不要在模板内判断
-
 ##使用方法
-这里还是分成两部分，一个是直接在html上使用，一个是结合Gulp工具
-有一个简单的例子在 `./dist/handlebars.html`
+我使用 browserify 的时间还不长，对于他的各种参数和API理解还不够透彻，这里，我简单的讲下我的所学所得。
 
-###直接引用
+browserify 使用有两种方式，命令行和结合其他构建工具的API方式
+
+###命令行方式
+browserify 的创造者为他提供了很多的参数，以解决开发中的各种问题。这里讲几个我开发中遇到的问题和解决办法
+
+* **当你用commonjs规范写好代码后，最简单的编译方法是**
+
+bar.js:
+```javascript
+var bar = { name: 'bar' }
+module.exports = bar;
+```
+foo.js:
+```javascript
+var bar = require('bar')
+console.log(bar)
+```
+
+bash
+```bash
+$ browserify foo.js > bundle.js
+```
+从你的入口文件 foo.js 进行抓取，把所用到的 foo.js bar.js 打包成 bundle.js。
+这样最大的好处就是写代码的时候不用担心全局变量太多，各模块之间互相影响的问题。
+
+* **暴露模块到浏览器中**，比如：
+
+foo.js:
+```javascript
+var foo = {}
+module.exports = foo
+```
+bash:
+```bash
+$ browserify -r /foo.js:foo > bundle,js
+```
+如果 foo.js 文件向外暴露了一个模块接口，用不带参数的方法打包，是引用不到foo模块的。
+browserify 提供了一个参数
+> --require, -r  接模块名字或文件名，文件名和模块名之间用冒号分隔
+
+模块名就是可以在外部 require 到的名字，browserify 同时向外暴露了 require 方法
+外部 HTML 文件：
 ```html
- <script src="http://s0.qhimg.com/default/;jquery.min/jquery_1_11_3.js"></script>
- <script src='https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.3/handlebars.min.js'></script>
+<script>
+var foo require('foo')
+console.log(foo)
+</script>
 ```
-要先引用jquery才可以使用handlebars
 
-handlebars中可以使用变量，用`{{something}}`表示，使用的基本流程是
-> 写好模板 -> 编译模板 -> 渲染页面
-  
- 在html中引入handlebars模板有一个特殊规则
+* **项目中用到其他AMD/CMD库时，require 方法发生冲突**
+
+这种情况有两个解决办法
+1.将模块暴露成全局对象
+2.将 browserify 的 require 方法换名字
+
+一、将模块暴露成全局对象
+>--standalone -s  暴露一个通用模块规范（UMD）模块，如果项目中用了AMD/commonjs规范的库，可以直接用相应方法导入模块，如果没有，该模块会暴露成全局对象可以直接使用
+
+```bash
+$ browserify foo.js -s foo > bundle.js
+```
 ```html
- <script id="entry-template" type="text/x-handlebars-template">
-    /* something */
- </script>
+<script src='bundle.js'></script>
+console.log(foo)
 ```
-其中`id`是这个模板的唯一标示，之后用来编译模板
-编译模板有一个函数`Handlebars.compile`
+这个参数我只试过暴露成全局对象，有一篇[文章](http://www.forbeslindesay.co.uk/post/46324645400/standalone-browserify-builds)举例了使用requirejs和commonjs时的方法，有兴趣的可以参考下。
+
+二、将 browserify 的 require 方法换名字
+使用 derequire 包，或者用API结合 gulp 使用，详见Gulp+browserify里的 externalRequireName 参数
+
+* **生成sourcemap便于调试代码**
+
+> --debug -d 生成输出文件的sourcemap
+
+因为输出后的文件是压缩过的，出了bug不方便调试，所以项目未上线前经常打sourcemap用于调试
+```bash
+$ browserify foo.js --debug > bundle.js
+```
+
+* **代码中使用其他库，如handlebars**
+
+> --transform -t 加转换用的模块名，文件会在编译前先转换模块
+
+如在项目中使用了handlebars，正常的编译是不会识别 handlebars 的语法的，但是我们可以加-t参数，-t hbsfy（一个面向browserify编译handlebars的工具）预编译模板文件为html
+
+
+###Gulp + browserify
+这一节主要讲 browserify ，所以Gulp的东西简单略过，如果想详细了解 Gulp， 请看[这里]
+
+**引入browserify模块**
+```bash
+$ npm install browserify --save-dev
+```
+在gulp中的使用
 ```javascript
-//得到模板内容
-var source = $('#entry-template').html()
-//编译模板
-var template = Handlebars.compile(source)
+var browserify = require('browserify');
+var b = browserify();
+b.add('./browser/main.js');
+b.bundle().pipe(process.stdout);
 ```
-这时得到的template就是编好的模板了，编译后得到一个function，function的参数对应模板里的变量
 
-渲染页面：
+**browserify()的参数**
+命令行的大部分参数这里都可以做到，举一个例子
 ```javascript
-$('body').html(template({name: 'Oscar'})
+browserify({
+    entries: './foo.js',
+    debug: true,
+    standalone: foo,
+    extensions: '.hbs',
+    externalRequireName: load
+})
 ```
+解释一下各个参数的意义：
+> `entries` 是入口文件，和`add()`方法的参数意义一样
+`debug` 生成sourcemap文件
+`standalone` 暴露UMD模块，和命令行一样
+`extensions` 指定后缀名，require的时候就可以省略后缀了
+`externalRequireName` 如果暴露了require方法，但是担心会发生冲突，可以用这个参数重命名require方法，如上面的例子重命名为 load，使用时： var foo = load('foo')
 
-### 特性
-####变量
-这个之前的例子中就有涉及
-```javascript
-//模板
-<h1>{{title}}</h1>  
----------------------------
-obj = {
-    title: 'This is title'
-}
-template(obj)   //obj中的title属性的值对应到{{title}}变量的位置
-```
+**其他常用的方法**
 
-####解析html标签
-有的时候需要填到模板的字符串中包含标签，像上面那样使用会导致标签符号被输出到页面
-使用`{{{something}}}`的变量可以避免标签转义，但同时要小心html注入
-```javascript
-<div>                           //DOM结构
-    {{{body}}}
-</div>
--------------------------
-obj = {
-    body: '<p>this is a p tag</p>'
-}
--------------------------
-output: 
-<div>                           //DOM结构
-    <p>this is a p tag</p>      //这里的<p>是标签，不会显示在页面上
-</div>
-```
+**add()**
+> `b.add()`  添加入口文件，可以是数组
 
-####支持路径
-数据：
-```javascript
-var obj = {
-    comments: [
-      {id: 1, title: 'this is comments'},
-      {id: 2, title: 'there are comments'}
-    ],
-    permalink: 'something'
-  }
-```
-渲染：
-```javascript
-<h1>Comments</h1>
+**require()**
+> `b.require()` 和-r参数一样，暴露模块到外部，不过不是用冒号分隔，是指定expose属性
+如 require('./vendor/angular/angular.js', {expose: 'angular'}) 使用时 require（'angular')
 
-<div id="comments">
-  {{#each comments}}
-  <h2><a href="/posts/{{../permalink}}#{{id}}">{{title}}</a></h2>
-  <div>{{body}}</div>
-  {{/each}}
-</div>
-```
-结果：
-```javascript
-<h1>Comments</h1>
+**bundle()**
+> `b.bundle()` 打包文件
 
-<div id="comments">
-  <h2><a href="/posts/something#1">this is comments</a></h2>
-  <h2><a href="/posts/something#2">there are comments</a></h2>
-</div>
-```
-
-`{{#each comments}}`会遍历comments数组中每一个变量，块级表达式内的上下文环境为comments，拿不到permalink属性，所以使用路径`../permalink`拿到上一级的信息
-
-####注释方法
-`{{!-- --}}` 或 `{{! }}`
-
-####块级表达式
-块级表达式会创建新的上下文，handlebars官方提供了很多好用的块级表达式，诸如`each` `with`等
-使用块级表达式的方法是在前面加`#`号，同时在结束后使用`/`符号
-```javascript
-{{#each comments}}
-    something
-{{/each}}
-```
-each 是一个块级表达式的名字，comments 是它的参数，在块级表达式内，上下文环境变成了参数，所以块级表达式内部使用{{}}访问的变量，其实是`comments.a`的形式，请看上一个例子。
-
-其实块级表达式是使用 `Handlebars.registerHelper` 定义的，这个函数还可以自定义 helper 表达式，这里附上一段代码供大家分析。
-```javascript
-var obj = {
-    comments: [
-      {id: 1, title: 'this is comments'},
-      {id: 2, title: 'there are comments'}
-    ],
-    permalink: 'something'
-  }
-```
-```javascript
-//块级表达式 each 的定义  context 代表参数 | options.fn 接受上下文作为参数
-Handlebars.registerHelper('each', function(context, options) {
-  var ret = "";
-
-  for(var i=0, j=context.length; i<j; i++) {
-    ret = ret + options.fn(context[i]);
-  }
-
-  return ret;
-});
-```
-我这里说的参数的上下文，其实就是参数本身，comments是一个对象，它内部属性的上下文就是comments
-![context和options](http://p2.qhimg.com/d/inn/a1e612cd/context.png)
+**transform**
+> `b.transform()` 转换模块，可以链式调用，如b.transform(hbsfy).transform(brfs).transform(browserify_shim)， 参数还可以是 function
 
 
-####使用helper表达式
-```javascript
-//定义 helper 表达式名为 fullName
-Handlebars.registerHelper('fullName', function(person) {
-  return person.firstName + " " + person.lastName;
-});
-```
-```javascript
-//模板
-<h1>By {{fullName author}}</h1>
-----------------------------------
-//数据
-var context = {
-  author: {firstName: "Alan", lastName: "Johnson"},
-};
-----------------------------------
-//输出
-<h1>By Alan Johnson</h1>
-```
-调用 helper 直接使用`{{helperName}}`就可以了，后面跟的是参数，传进helper函数，helper并不会改变当前上下文。
+##结语
+这些就是我在项目中学习到的使用方法，还有很多参数API我还不了解，最好的学习资料就是 browserify 的[Github](https://github.com/substack/node-browserify)地址了，大家一起进步一起学习吧。
 
-使用helper可以做一些自定义的工作，比如输出传进模板的数据
-```
-Handlebars.registerHelper('data', function(context) {
-  return context;
-});
-```
-
-结合上面的helper定义，会发现**helper表达式**和**块级表达式**的定义方法很像，但是使用方法却不同，这里需要注意一下。块级表达式也是helper的一种。
-
-####Partials
-个人觉得partials很有用，可以把大的模板拆分成几个小部分，便于修改和维护
-定义partials使用函数`Handlebars.registerPartial`，接受两个参数，第一个是partials的名字，第二个是作为partials的模板字符串。
-```html
-<div class="post">
-  {{> userMessage tagName="h1" }}
-
-  <h1>Comments</h1>
-
-  {{#each comments}}
-    {{> userMessage tagName="h2" }}
-  {{/each}}
-</div>
-```
-定义partials和数据：
-```javascript
-Handlebars.registerPartial('userMessage',
-    '<{{tagName}}>By {{author.firstName}} {{author.lastName}}</{{tagName}}>'
-    + '<div class="body">{{body}}</div>');
-var context = {
-  author: {firstName: "Alan", lastName: "Johnson"},
-  body: "I Love Handlebars",
-  comments: [{
-    author: {firstName: "Yehuda", lastName: "Katz"},
-    body: "Me too!"
-  }]
-};
-```
-结果：
-```html
-<div class="post">
-  <h1>By Alan Johnson</h1>
-  <div class="body">I Love Handlebars</div>
-
-  <h1>Comments</h1>
-
-  <h2>By Yehuda Katz</h2>
-  <div class="body">Me Too!</div>
-</div>
-```
-partials的使用是`{{> partialName}}`，如果partials存在，则插入partials的模板。
-> 其他用法
-
-* 自定义参数传入模板中，只需像例子中`{{> userMessage tagName="h1" }}`这样就好了。
-* 动态partials名字，可以定义一个函数，返回值是partials的名字，使用时括号调用函数名`{{> (functionName) }}`。也可以用变量，不过用变量的时候需要使用lookup表达式`{{> (lookup . 'myVariable') }}`（这个我没用过）
-* 改变partials上下文，`{{> userMessage context }}`context是新的上下文
-
-
-###内置表达式
-handlebars提供了几个常用的逻辑判断表达式，在这里我介绍几个常用的
-
-> ####with
-
-with表达式会改变上下文
-```
-{
-  title: "My first post!",
-  author: {
-    firstName: "Charles",
-    lastName: "Jolley"
-  }
-}
-```
-当使用`{{#with author}}`的时候，在`{{/with}}`前，上下文变为author，这里with的参数是一个对象
-
-> ####each
-
-each表达式同样会改变上下文
-```
-{
-  people: [
-    "Yehuda Katz",
-    "Alan Johnson",
-    "Charles Jolley"
-  ]
-}
-```
-与with不同的是，each的参数是一个数组对象，它相当于遍历数组每一个元素。
-`this`   代表当前值
-```
-{{#each people}}
-    <li>{{this}}</li>
-{{/each}}
-------------------------------
-<li>Yehuda Katz</li>
-<li>Alan Johnson</li>
-<li>Charles Jolley</li>
-```
-
-> ####if    else
-
-if不会改变上下文
-```
-{{#if author}}
-    <h1>{{firstName}} {{lastName}}</h1>
-{{else}}
-    <h1>Unknown Author</h1>
-{{/if}}
-```
-如果author属性存在，则执行，else执行另一句
-
-> ####unless
-
-和if相反，不存在变量则执行，没有else
-
-###结合Gulp使用
