@@ -122,7 +122,7 @@ browserify({
 ```
 解释一下各个参数的意义：
 > `entries` 是入口文件，和`add()`方法的参数意义一样
-`debug` 生成sourcemap文件
+`debug` 生成sourcemap文件c
 `standalone` 暴露UMD模块，和命令行一样
 `extensions` 指定后缀名，require的时候就可以省略后缀了
 `externalRequireName` 如果暴露了require方法，但是担心会发生冲突，可以用这个参数重命名require方法，如上面的例子重命名为 load，使用时： var foo = load('foo')
