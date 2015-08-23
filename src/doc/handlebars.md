@@ -9,7 +9,7 @@
 handlebars虽然提供了逻辑判断方法，但是能在模板外判断的数据尽量不要在模板内判断
 
 ##使用方法
-这里还是分成两部分，一个是直接在html上使用，一个是结合Gulp工具
+这里还是分成两部分，一个是直接在html上使用，一个是结合Browserify工具
 有一个简单的例子在 `./dist/handlebars.html`
 
 ###直接引用
@@ -282,4 +282,61 @@ if不会改变上下文
 
 和if相反，不存在变量则执行，没有else
 
-###结合Gulp使用
+###结合Browserify使用
+我简单介绍一下handlebars在browserify下的用法
+有一个很方便的npm模块[node-hbsfy](https://github.com/epeli/node-hbsfy)，它可以结合require方法使用，将模板写成单独的文件，像引入js文件一样require进来稍加处理就可以使用了
+
+####使用
+首先要安装handlebars和hbsfy模块
+```bash
+$ npm install handlebars@1
+$ npm install hbsfy
+```
+有一个main.js文件内引用了handlebars模板文件
+```javascript
+var template = require("./template.hbs");
+document.body.innerHTML = template({ name: "Epeli" });
+```
+模板文件
+```
+<h1>Hello {{name}}</h1>
+```
+编译：
+```bash
+$ browserify -t hbsfy main.js > bundle.js
+```
+这里`-t`参数在handlebars一节介绍过，是使用其他模块转换文件，我们用hbsfy模块预编译了模板文件。这样写的好处是减少了handlebars文件和html文件之间的耦合
+
+####参数
+`--extensions` `-e` 指定扩展名，require的时候就不用写扩展名了，require方法会按扩展名去寻找文件
+我一般是写 "hbs"，这里有个要注意的地方，引入hbsfy模块后，handlebars文件的后缀名改为了.hbs，方便好写
+
+在gulp里加参数的格式如下，使用`configure`方法，返回新的hbsfy转换模块
+```
+var hbsfy = require("hbsfy").configure({
+  extensions: ["hbs"]
+});
+```
+
+
+官方还有几个参数，我没用过就不误人子弟了。
+
+####使用helper
+使用helper要先引入Handlebars方法，这里用的方法不是handlebars自带的，而是hbsfy处理过的
+```
+var Handlebars = require("hbsfy/runtime");
+Handlebars.registerHelper("upcase", function(s) {
+  return s.toUpperCase();
+});
+```
+
+####使用partials
+partials可以直接用，不过第二个参数略有不同，不再是handlebars字符串了，而是一个预编译的模板
+```
+Handlebars.registerPartial('link', require("./partial.hbs"));
+```
+`require("./partials.hbs")`返回的是function。
+
+
+##结语
+写的多有不好，还请见谅，还是那番老话，多看官方文档，大家一起进步！
