@@ -1,285 +1,147 @@
-#Ê¹ÓÃhandlebars
+#ä½¿ç”¨browserify
 
-[handlebars](https://github.com/wycats/handlebars.js/) ÊÇÒ»¸öÇ°¶ËhtmlÄ£°å£¬¿ÉÒÔÇ¶Èë±äÁ¿ºÍ¼òµ¥µÄÂß¼­ÅĞ¶Ï£¬ÔÚäÖÈ¾´óÁ¿ÖØ¸´µÄhtml¡¢ajax½ÓÊÕÊı¾İäÖÈ¾Ò³ÃæÊ±·Ç³£ÓĞÓÃ£¬¹Ù·½µÄÎÄµµ·Ç³£Ïê¾¡£¬ÔÚÕâÀïÎÒ¼òµ¥½éÉÜÒ»ÏÂËüµÄÓÃ·¨¡£
+
+[browserify](https://github.com/substack/node-browserify) æ˜¯ä¸€ä¸ªå¯ä»¥åœ¨å‰ç«¯ç¼–ç¨‹ä¸­ä½¿ç”¨commonjsè§„èŒƒçš„å·¥å…·ï¼Œåœ¨å†™å‰ç«¯ä»£ç çš„æ—¶å€™å®Œå…¨å¯ä»¥ç”¨ node ä¸­ require å’Œ module.exports ç­‰æ–¹æ³•ï¼Œæ¨¡å—åŒ–ä½ çš„ä»£ç ï¼Œçœå»å¦å†™å‘½åç©ºé—´ï¼Œç«‹å³æ‰§è¡Œå‡½æ•°ç­‰è¿‡ç¨‹ã€‚ä½¿ç”¨æ—¶ï¼Œåªéœ€è¦ç”¨ browserify ç¼–è¯‘ä¸€ä¸‹å°±å¯ä»¥ä½¿ç”¨äº†ã€‚
 
 [TOC]
 
-**×¢Òâ**
-Ê¹ÓÃÄ£°åÊÇÎªÁË¼ò»¯Ğ´·±ÔÓÖØ¸´µÄhtml±êÇ©£¬Âß¼­·½ÃæÓ¦¸ÃÔ½¼òµ¥Ô½ºÃ¡£
-handlebarsËäÈ»Ìá¹©ÁËÂß¼­ÅĞ¶Ï·½·¨£¬µ«ÊÇÄÜÔÚÄ£°åÍâÅĞ¶ÏµÄÊı¾İ¾¡Á¿²»ÒªÔÚÄ£°åÄÚÅĞ¶Ï
+##ä½¿ç”¨æ–¹æ³•
+æˆ‘ä½¿ç”¨ browserify çš„æ—¶é—´è¿˜ä¸é•¿ï¼Œå¯¹äºä»–çš„å„ç§å‚æ•°å’ŒAPIç†è§£è¿˜ä¸å¤Ÿé€å½»ï¼Œè¿™é‡Œï¼Œæˆ‘ç®€å•çš„è®²ä¸‹æˆ‘çš„æ‰€å­¦æ‰€å¾—ã€‚
 
-##Ê¹ÓÃ·½·¨
-ÕâÀï»¹ÊÇ·Ö³ÉÁ½²¿·Ö£¬Ò»¸öÊÇÖ±½ÓÔÚhtmlÉÏÊ¹ÓÃ£¬Ò»¸öÊÇ½áºÏGulp¹¤¾ß
-ÓĞÒ»¸ö¼òµ¥µÄÀı×ÓÔÚ `./dist/handlebars.html`
+browserify ä½¿ç”¨æœ‰ä¸¤ç§æ–¹å¼ï¼Œå‘½ä»¤è¡Œå’Œç»“åˆå…¶ä»–æ„å»ºå·¥å…·çš„APIæ–¹å¼
 
-###Ö±½ÓÒıÓÃ
+###å‘½ä»¤è¡Œæ–¹å¼
+browserify çš„åˆ›é€ è€…ä¸ºä»–æä¾›äº†å¾ˆå¤šçš„å‚æ•°ï¼Œä»¥è§£å†³å¼€å‘ä¸­çš„å„ç§é—®é¢˜ã€‚è¿™é‡Œè®²å‡ ä¸ªæˆ‘å¼€å‘ä¸­é‡åˆ°çš„é—®é¢˜å’Œè§£å†³åŠæ³•
+
+* **å½“ä½ ç”¨commonjsè§„èŒƒå†™å¥½ä»£ç åï¼Œæœ€ç®€å•çš„ç¼–è¯‘æ–¹æ³•æ˜¯**
+
+bar.js:
+```javascript
+var bar = { name: 'bar' }
+module.exports = bar;
+```
+foo.js:
+```javascript
+var bar = require('bar')
+console.log(bar)
+```
+
+bash
+```bash
+$ browserify foo.js > bundle.js
+```
+ä»ä½ çš„å…¥å£æ–‡ä»¶ foo.js è¿›è¡ŒæŠ“å–ï¼ŒæŠŠæ‰€ç”¨åˆ°çš„ foo.js bar.js æ‰“åŒ…æˆ bundle.jsã€‚
+è¿™æ ·æœ€å¤§çš„å¥½å¤„å°±æ˜¯å†™ä»£ç çš„æ—¶å€™ä¸ç”¨æ‹…å¿ƒå…¨å±€å˜é‡å¤ªå¤šï¼Œå„æ¨¡å—ä¹‹é—´äº’ç›¸å½±å“çš„é—®é¢˜ã€‚
+
+* **æš´éœ²æ¨¡å—åˆ°æµè§ˆå™¨ä¸­**ï¼Œæ¯”å¦‚ï¼š
+
+foo.js:
+```javascript
+var foo = {}
+module.exports = foo
+```
+bash:
+```bash
+$ browserify -r /foo.js:foo > bundle,js
+```
+å¦‚æœ foo.js æ–‡ä»¶å‘å¤–æš´éœ²äº†ä¸€ä¸ªæ¨¡å—æ¥å£ï¼Œç”¨ä¸å¸¦å‚æ•°çš„æ–¹æ³•æ‰“åŒ…ï¼Œæ˜¯å¼•ç”¨ä¸åˆ°fooæ¨¡å—çš„ã€‚
+browserify æä¾›äº†ä¸€ä¸ªå‚æ•°
+> --require, -r  æ¥æ¨¡å—åå­—æˆ–æ–‡ä»¶åï¼Œæ–‡ä»¶åå’Œæ¨¡å—åä¹‹é—´ç”¨å†’å·åˆ†éš”
+
+æ¨¡å—åå°±æ˜¯å¯ä»¥åœ¨å¤–éƒ¨ require åˆ°çš„åå­—ï¼Œbrowserify åŒæ—¶å‘å¤–æš´éœ²äº† require æ–¹æ³•
+å¤–éƒ¨ HTML æ–‡ä»¶ï¼š
 ```html
- <script src="http://s0.qhimg.com/default/;jquery.min/jquery_1_11_3.js"></script>
- <script src='https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.3/handlebars.min.js'></script>
+<script>
+var foo require('foo')
+console.log(foo)
+</script>
 ```
-ÒªÏÈÒıÓÃjquery²Å¿ÉÒÔÊ¹ÓÃhandlebars
 
-handlebarsÖĞ¿ÉÒÔÊ¹ÓÃ±äÁ¿£¬ÓÃ`{{something}}`±íÊ¾£¬Ê¹ÓÃµÄ»ù±¾Á÷³ÌÊÇ
-> Ğ´ºÃÄ£°å -> ±àÒëÄ£°å -> äÖÈ¾Ò³Ãæ
-  
- ÔÚhtmlÖĞÒıÈëhandlebarsÄ£°åÓĞÒ»¸öÌØÊâ¹æÔò
+* **é¡¹ç›®ä¸­ç”¨åˆ°å…¶ä»–AMD/CMDåº“æ—¶ï¼Œrequire æ–¹æ³•å‘ç”Ÿå†²çª**
+
+è¿™ç§æƒ…å†µæœ‰ä¸¤ä¸ªè§£å†³åŠæ³•
+1.å°†æ¨¡å—æš´éœ²æˆå…¨å±€å¯¹è±¡
+2.å°† browserify çš„ require æ–¹æ³•æ¢åå­—
+
+ä¸€ã€å°†æ¨¡å—æš´éœ²æˆå…¨å±€å¯¹è±¡
+>--standalone -s  æš´éœ²ä¸€ä¸ªé€šç”¨æ¨¡å—è§„èŒƒï¼ˆUMDï¼‰æ¨¡å—ï¼Œå¦‚æœé¡¹ç›®ä¸­ç”¨äº†AMD/commonjsè§„èŒƒçš„åº“ï¼Œå¯ä»¥ç›´æ¥ç”¨ç›¸åº”æ–¹æ³•å¯¼å…¥æ¨¡å—ï¼Œå¦‚æœæ²¡æœ‰ï¼Œè¯¥æ¨¡å—ä¼šæš´éœ²æˆå…¨å±€å¯¹è±¡å¯ä»¥ç›´æ¥ä½¿ç”¨
+
+```bash
+$ browserify foo.js -s foo > bundle.js
+```
 ```html
- <script id="entry-template" type="text/x-handlebars-template">
-    /* something */
- </script>
+<script src='bundle.js'></script>
+console.log(foo)
 ```
-ÆäÖĞ`id`ÊÇÕâ¸öÄ£°åµÄÎ¨Ò»±êÊ¾£¬Ö®ºóÓÃÀ´±àÒëÄ£°å
-±àÒëÄ£°åÓĞÒ»¸öº¯Êı`Handlebars.compile`
+è¿™ä¸ªå‚æ•°æˆ‘åªè¯•è¿‡æš´éœ²æˆå…¨å±€å¯¹è±¡ï¼Œæœ‰ä¸€ç¯‡[æ–‡ç« ](http://www.forbeslindesay.co.uk/post/46324645400/standalone-browserify-builds)ä¸¾ä¾‹äº†ä½¿ç”¨requirejså’Œcommonjsæ—¶çš„æ–¹æ³•ï¼Œæœ‰å…´è¶£çš„å¯ä»¥å‚è€ƒä¸‹ã€‚
+
+äºŒã€å°† browserify çš„ require æ–¹æ³•æ¢åå­—
+ä½¿ç”¨ derequire åŒ…ï¼Œæˆ–è€…ç”¨APIç»“åˆ gulp ä½¿ç”¨ï¼Œè¯¦è§Gulp+browserifyé‡Œçš„ externalRequireName å‚æ•°
+
+* **ç”Ÿæˆsourcemapä¾¿äºè°ƒè¯•ä»£ç **
+
+> --debug -d ç”Ÿæˆè¾“å‡ºæ–‡ä»¶çš„sourcemap
+
+å› ä¸ºè¾“å‡ºåçš„æ–‡ä»¶æ˜¯å‹ç¼©è¿‡çš„ï¼Œå‡ºäº†bugä¸æ–¹ä¾¿è°ƒè¯•ï¼Œæ‰€ä»¥é¡¹ç›®æœªä¸Šçº¿å‰ç»å¸¸æ‰“sourcemapç”¨äºè°ƒè¯•
+```bash
+$ browserify foo.js --debug > bundle.js
+```
+
+* **ä»£ç ä¸­ä½¿ç”¨å…¶ä»–åº“ï¼Œå¦‚handlebars**
+
+> --transform -t åŠ è½¬æ¢ç”¨çš„æ¨¡å—åï¼Œæ–‡ä»¶ä¼šåœ¨ç¼–è¯‘å‰å…ˆè½¬æ¢æ¨¡å—
+
+å¦‚åœ¨é¡¹ç›®ä¸­ä½¿ç”¨äº†handlebarsï¼Œæ­£å¸¸çš„ç¼–è¯‘æ˜¯ä¸ä¼šè¯†åˆ« handlebars çš„è¯­æ³•çš„ï¼Œä½†æ˜¯æˆ‘ä»¬å¯ä»¥åŠ -tå‚æ•°ï¼Œ-t hbsfyï¼ˆä¸€ä¸ªé¢å‘browserifyç¼–è¯‘handlebarsçš„å·¥å…·ï¼‰é¢„ç¼–è¯‘æ¨¡æ¿æ–‡ä»¶ä¸ºhtml
+
+
+###Gulp + browserify
+è¿™ä¸€èŠ‚ä¸»è¦è®² browserify ï¼Œæ‰€ä»¥Gulpçš„ä¸œè¥¿ç®€å•ç•¥è¿‡ï¼Œå¦‚æœæƒ³è¯¦ç»†äº†è§£ Gulpï¼Œ è¯·çœ‹[è¿™é‡Œ]
+
+**å¼•å…¥browserifyæ¨¡å—**
+```bash
+$ npm install browserify --save-dev
+```
+åœ¨gulpä¸­çš„ä½¿ç”¨
 ```javascript
-//µÃµ½Ä£°åÄÚÈİ
-var source = $('#entry-template').html()
-//±àÒëÄ£°å
-var template = Handlebars.compile(source)
+var browserify = require('browserify');
+var b = browserify();
+b.add('./browser/main.js');
+b.bundle().pipe(process.stdout);
 ```
-ÕâÊ±µÃµ½µÄtemplate¾ÍÊÇ±àºÃµÄÄ£°åÁË£¬±àÒëºóµÃµ½Ò»¸öfunction£¬functionµÄ²ÎÊı¶ÔÓ¦Ä£°åÀïµÄ±äÁ¿
 
-äÖÈ¾Ò³Ãæ£º
+**browserify()çš„å‚æ•°**
+å‘½ä»¤è¡Œçš„å¤§éƒ¨åˆ†å‚æ•°è¿™é‡Œéƒ½å¯ä»¥åšåˆ°ï¼Œä¸¾ä¸€ä¸ªä¾‹å­
 ```javascript
-$('body').html(template({name: 'Oscar'})
+browserify({
+    entries: './foo.js',
+    debug: true,
+    standalone: foo,
+    extensions: '.hbs',
+    externalRequireName: load
+})
 ```
+è§£é‡Šä¸€ä¸‹å„ä¸ªå‚æ•°çš„æ„ä¹‰ï¼š
+> `entries` æ˜¯å…¥å£æ–‡ä»¶ï¼Œå’Œ`add()`æ–¹æ³•çš„å‚æ•°æ„ä¹‰ä¸€æ ·
+`debug` ç”Ÿæˆsourcemapæ–‡ä»¶
+`standalone` æš´éœ²UMDæ¨¡å—ï¼Œå’Œå‘½ä»¤è¡Œä¸€æ ·
+`extensions` æŒ‡å®šåç¼€åï¼Œrequireçš„æ—¶å€™å°±å¯ä»¥çœç•¥åç¼€äº†
+`externalRequireName` å¦‚æœæš´éœ²äº†requireæ–¹æ³•ï¼Œä½†æ˜¯æ‹…å¿ƒä¼šå‘ç”Ÿå†²çªï¼Œå¯ä»¥ç”¨è¿™ä¸ªå‚æ•°é‡å‘½årequireæ–¹æ³•ï¼Œå¦‚ä¸Šé¢çš„ä¾‹å­é‡å‘½åä¸º loadï¼Œä½¿ç”¨æ—¶ï¼š var foo = load('foo')
 
-### ÌØĞÔ
-####±äÁ¿
-Õâ¸öÖ®Ç°µÄÀı×ÓÖĞ¾ÍÓĞÉæ¼°
-```javascript
-//Ä£°å
-<h1>{{title}}</h1>  
----------------------------
-obj = {
-    title: 'This is title'
-}
-template(obj)   //objÖĞµÄtitleÊôĞÔµÄÖµ¶ÔÓ¦µ½{{title}}±äÁ¿µÄÎ»ÖÃ
-```
+**å…¶ä»–å¸¸ç”¨çš„æ–¹æ³•**
 
-####½âÎöhtml±êÇ©
-ÓĞµÄÊ±ºòĞèÒªÌîµ½Ä£°åµÄ×Ö·û´®ÖĞ°üº¬±êÇ©£¬ÏñÉÏÃæÄÇÑùÊ¹ÓÃ»áµ¼ÖÂ±êÇ©·ûºÅ±»Êä³öµ½Ò³Ãæ
-Ê¹ÓÃ`{{{something}}}`µÄ±äÁ¿¿ÉÒÔ±ÜÃâ±êÇ©×ªÒå£¬µ«Í¬Ê±ÒªĞ¡ĞÄhtml×¢Èë
-```javascript
-<div>                           //DOM½á¹¹
-    {{{body}}}
-</div>
--------------------------
-obj = {
-    body: '<p>this is a p tag</p>'
-}
--------------------------
-output: 
-<div>                           //DOM½á¹¹
-    <p>this is a p tag</p>      //ÕâÀïµÄ<p>ÊÇ±êÇ©£¬²»»áÏÔÊ¾ÔÚÒ³ÃæÉÏ
-</div>
-```
+**add()**
+> `b.add()`  æ·»åŠ å…¥å£æ–‡ä»¶ï¼Œå¯ä»¥æ˜¯æ•°ç»„
 
-####Ö§³ÖÂ·¾¶
-Êı¾İ£º
-```javascript
-var obj = {
-    comments: [
-      {id: 1, title: 'this is comments'},
-      {id: 2, title: 'there are comments'}
-    ],
-    permalink: 'something'
-  }
-```
-äÖÈ¾£º
-```javascript
-<h1>Comments</h1>
+**require()**
+> `b.require()` å’Œ-rå‚æ•°ä¸€æ ·ï¼Œæš´éœ²æ¨¡å—åˆ°å¤–éƒ¨ï¼Œä¸è¿‡ä¸æ˜¯ç”¨å†’å·åˆ†éš”ï¼Œæ˜¯æŒ‡å®šexposeå±æ€§
+å¦‚ require('./vendor/angular/angular.js', {expose: 'angular'}) ä½¿ç”¨æ—¶ requireï¼ˆ'angular')
 
-<div id="comments">
-  {{#each comments}}
-  <h2><a href="/posts/{{../permalink}}#{{id}}">{{title}}</a></h2>
-  <div>{{body}}</div>
-  {{/each}}
-</div>
-```
-½á¹û£º
-```javascript
-<h1>Comments</h1>
+**bundle()**
+> `b.bundle()` æ‰“åŒ…æ–‡ä»¶
 
-<div id="comments">
-  <h2><a href="/posts/something#1">this is comments</a></h2>
-  <h2><a href="/posts/something#2">there are comments</a></h2>
-</div>
-```
-
-`{{#each comments}}`»á±éÀúcommentsÊı×éÖĞÃ¿Ò»¸ö±äÁ¿£¬¿é¼¶±í´ïÊ½ÄÚµÄÉÏÏÂÎÄ»·¾³Îªcomments£¬ÄÃ²»µ½permalinkÊôĞÔ£¬ËùÒÔÊ¹ÓÃÂ·¾¶`../permalink`ÄÃµ½ÉÏÒ»¼¶µÄĞÅÏ¢
-
-####×¢ÊÍ·½·¨
-`{{!-- --}}` »ò `{{! }}`
-
-####¿é¼¶±í´ïÊ½
-¿é¼¶±í´ïÊ½»á´´½¨ĞÂµÄÉÏÏÂÎÄ£¬handlebars¹Ù·½Ìá¹©ÁËºÜ¶àºÃÓÃµÄ¿é¼¶±í´ïÊ½£¬ÖîÈç`each` `with`µÈ
-Ê¹ÓÃ¿é¼¶±í´ïÊ½µÄ·½·¨ÊÇÔÚÇ°Ãæ¼Ó`#`ºÅ£¬Í¬Ê±ÔÚ½áÊøºóÊ¹ÓÃ`/`·ûºÅ
-```javascript
-{{#each comments}}
-    something
-{{/each}}
-```
-each ÊÇÒ»¸ö¿é¼¶±í´ïÊ½µÄÃû×Ö£¬comments ÊÇËüµÄ²ÎÊı£¬ÔÚ¿é¼¶±í´ïÊ½ÄÚ£¬ÉÏÏÂÎÄ»·¾³±ä³ÉÁË²ÎÊı£¬ËùÒÔ¿é¼¶±í´ïÊ½ÄÚ²¿Ê¹ÓÃ{{}}·ÃÎÊµÄ±äÁ¿£¬ÆäÊµÊÇ`comments.a`µÄĞÎÊ½£¬Çë¿´ÉÏÒ»¸öÀı×Ó¡£
-
-ÆäÊµ¿é¼¶±í´ïÊ½ÊÇÊ¹ÓÃ `Handlebars.registerHelper` ¶¨ÒåµÄ£¬Õâ¸öº¯Êı»¹¿ÉÒÔ×Ô¶¨Òå helper ±í´ïÊ½£¬ÕâÀï¸½ÉÏÒ»¶Î´úÂë¹©´ó¼Ò·ÖÎö¡£
-```javascript
-var obj = {
-    comments: [
-      {id: 1, title: 'this is comments'},
-      {id: 2, title: 'there are comments'}
-    ],
-    permalink: 'something'
-  }
-```
-```javascript
-//¿é¼¶±í´ïÊ½ each µÄ¶¨Òå  context ´ú±í²ÎÊı | options.fn ½ÓÊÜÉÏÏÂÎÄ×÷Îª²ÎÊı
-Handlebars.registerHelper('each', function(context, options) {
-  var ret = "";
-
-  for(var i=0, j=context.length; i<j; i++) {
-    ret = ret + options.fn(context[i]);
-  }
-
-  return ret;
-});
-```
-ÎÒÕâÀïËµµÄ²ÎÊıµÄÉÏÏÂÎÄ£¬ÆäÊµ¾ÍÊÇ²ÎÊı±¾Éí£¬commentsÊÇÒ»¸ö¶ÔÏó£¬ËüÄÚ²¿ÊôĞÔµÄÉÏÏÂÎÄ¾ÍÊÇcomments
-![contextºÍoptions](http://p2.qhimg.com/d/inn/a1e612cd/context.png)
+**transform**
+> `b.transform()` è½¬æ¢æ¨¡å—ï¼Œå¯ä»¥é“¾å¼è°ƒç”¨ï¼Œå¦‚b.transform(hbsfy).transform(brfs).transform(browserify_shim)ï¼Œ å‚æ•°è¿˜å¯ä»¥æ˜¯ function
 
 
-####Ê¹ÓÃhelper±í´ïÊ½
-```javascript
-//¶¨Òå helper ±í´ïÊ½ÃûÎª fullName
-Handlebars.registerHelper('fullName', function(person) {
-  return person.firstName + " " + person.lastName;
-});
-```
-```javascript
-//Ä£°å
-<h1>By {{fullName author}}</h1>
-----------------------------------
-//Êı¾İ
-var context = {
-  author: {firstName: "Alan", lastName: "Johnson"},
-};
-----------------------------------
-//Êä³ö
-<h1>By Alan Johnson</h1>
-```
-µ÷ÓÃ helper Ö±½ÓÊ¹ÓÃ`{{helperName}}`¾Í¿ÉÒÔÁË£¬ºóÃæ¸úµÄÊÇ²ÎÊı£¬´«½øhelperº¯Êı£¬helper²¢²»»á¸Ä±äµ±Ç°ÉÏÏÂÎÄ¡£
-
-Ê¹ÓÃhelper¿ÉÒÔ×öÒ»Ğ©×Ô¶¨ÒåµÄ¹¤×÷£¬±ÈÈçÊä³ö´«½øÄ£°åµÄÊı¾İ
-```
-Handlebars.registerHelper('data', function(context) {
-  return context;
-});
-```
-
-½áºÏÉÏÃæµÄhelper¶¨Òå£¬»á·¢ÏÖ**helper±í´ïÊ½**ºÍ**¿é¼¶±í´ïÊ½**µÄ¶¨Òå·½·¨ºÜÏñ£¬µ«ÊÇÊ¹ÓÃ·½·¨È´²»Í¬£¬ÕâÀïĞèÒª×¢ÒâÒ»ÏÂ¡£¿é¼¶±í´ïÊ½Ò²ÊÇhelperµÄÒ»ÖÖ¡£
-
-####Partials
-¸öÈË¾õµÃpartialsºÜÓĞÓÃ£¬¿ÉÒÔ°Ñ´óµÄÄ£°å²ğ·Ö³É¼¸¸öĞ¡²¿·Ö£¬±ãÓÚĞŞ¸ÄºÍÎ¬»¤
-¶¨ÒåpartialsÊ¹ÓÃº¯Êı`Handlebars.registerPartial`£¬½ÓÊÜÁ½¸ö²ÎÊı£¬µÚÒ»¸öÊÇpartialsµÄÃû×Ö£¬µÚ¶ş¸öÊÇ×÷ÎªpartialsµÄÄ£°å×Ö·û´®¡£
-```html
-<div class="post">
-  {{> userMessage tagName="h1" }}
-
-  <h1>Comments</h1>
-
-  {{#each comments}}
-    {{> userMessage tagName="h2" }}
-  {{/each}}
-</div>
-```
-¶¨ÒåpartialsºÍÊı¾İ£º
-```javascript
-Handlebars.registerPartial('userMessage',
-    '<{{tagName}}>By {{author.firstName}} {{author.lastName}}</{{tagName}}>'
-    + '<div class="body">{{body}}</div>');
-var context = {
-  author: {firstName: "Alan", lastName: "Johnson"},
-  body: "I Love Handlebars",
-  comments: [{
-    author: {firstName: "Yehuda", lastName: "Katz"},
-    body: "Me too!"
-  }]
-};
-```
-½á¹û£º
-```html
-<div class="post">
-  <h1>By Alan Johnson</h1>
-  <div class="body">I Love Handlebars</div>
-
-  <h1>Comments</h1>
-
-  <h2>By Yehuda Katz</h2>
-  <div class="body">Me Too!</div>
-</div>
-```
-partialsµÄÊ¹ÓÃÊÇ`{{> partialName}}`£¬Èç¹ûpartials´æÔÚ£¬Ôò²åÈëpartialsµÄÄ£°å¡£
-> ÆäËûÓÃ·¨
-
-* ×Ô¶¨Òå²ÎÊı´«ÈëÄ£°åÖĞ£¬Ö»ĞèÏñÀı×ÓÖĞ`{{> userMessage tagName="h1" }}`ÕâÑù¾ÍºÃÁË¡£
-* ¶¯Ì¬partialsÃû×Ö£¬¿ÉÒÔ¶¨ÒåÒ»¸öº¯Êı£¬·µ»ØÖµÊÇpartialsµÄÃû×Ö£¬Ê¹ÓÃÊ±À¨ºÅµ÷ÓÃº¯ÊıÃû`{{> (functionName) }}`¡£Ò²¿ÉÒÔÓÃ±äÁ¿£¬²»¹ıÓÃ±äÁ¿µÄÊ±ºòĞèÒªÊ¹ÓÃlookup±í´ïÊ½`{{> (lookup . 'myVariable') }}`£¨Õâ¸öÎÒÃ»ÓÃ¹ı£©
-* ¸Ä±äpartialsÉÏÏÂÎÄ£¬`{{> userMessage context }}`contextÊÇĞÂµÄÉÏÏÂÎÄ
-
-
-###ÄÚÖÃ±í´ïÊ½
-handlebarsÌá¹©ÁË¼¸¸ö³£ÓÃµÄÂß¼­ÅĞ¶Ï±í´ïÊ½£¬ÔÚÕâÀïÎÒ½éÉÜ¼¸¸ö³£ÓÃµÄ
-
-> ####with
-
-with±í´ïÊ½»á¸Ä±äÉÏÏÂÎÄ
-```
-{
-  title: "My first post!",
-  author: {
-    firstName: "Charles",
-    lastName: "Jolley"
-  }
-}
-```
-µ±Ê¹ÓÃ`{{#with author}}`µÄÊ±ºò£¬ÔÚ`{{/with}}`Ç°£¬ÉÏÏÂÎÄ±äÎªauthor£¬ÕâÀïwithµÄ²ÎÊıÊÇÒ»¸ö¶ÔÏó
-
-> ####each
-
-each±í´ïÊ½Í¬Ñù»á¸Ä±äÉÏÏÂÎÄ
-```
-{
-  people: [
-    "Yehuda Katz",
-    "Alan Johnson",
-    "Charles Jolley"
-  ]
-}
-```
-Óëwith²»Í¬µÄÊÇ£¬eachµÄ²ÎÊıÊÇÒ»¸öÊı×é¶ÔÏó£¬ËüÏàµ±ÓÚ±éÀúÊı×éÃ¿Ò»¸öÔªËØ¡£
-`this`   ´ú±íµ±Ç°Öµ
-```
-{{#each people}}
-    <li>{{this}}</li>
-{{/each}}
-------------------------------
-<li>Yehuda Katz</li>
-<li>Alan Johnson</li>
-<li>Charles Jolley</li>
-```
-
-> ####if    else
-
-if²»»á¸Ä±äÉÏÏÂÎÄ
-```
-{{#if author}}
-    <h1>{{firstName}} {{lastName}}</h1>
-{{else}}
-    <h1>Unknown Author</h1>
-{{/if}}
-```
-Èç¹ûauthorÊôĞÔ´æÔÚ£¬ÔòÖ´ĞĞ£¬elseÖ´ĞĞÁíÒ»¾ä
-
-> ####unless
-
-ºÍifÏà·´£¬²»´æÔÚ±äÁ¿ÔòÖ´ĞĞ£¬Ã»ÓĞelse
-
-###½áºÏGulpÊ¹ÓÃ
+##ç»“è¯­
+è¿™äº›å°±æ˜¯æˆ‘åœ¨é¡¹ç›®ä¸­å­¦ä¹ åˆ°çš„ä½¿ç”¨æ–¹æ³•ï¼Œè¿˜æœ‰å¾ˆå¤šå‚æ•°APIæˆ‘è¿˜ä¸äº†è§£ï¼Œæœ€å¥½çš„å­¦ä¹ èµ„æ–™å°±æ˜¯ browserify çš„[Github](https://github.com/substack/node-browserify)åœ°å€äº†ï¼Œå¤§å®¶ä¸€èµ·è¿›æ­¥ä¸€èµ·å­¦ä¹ å§ã€‚
